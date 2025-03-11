@@ -17,6 +17,9 @@ running = True
 # Delta Time (dt) is used to track time since last frame
 dt = 0
 
+# Width of Snake
+snake_size = 20
+
 # Player position with starting location
 player_pos = pygame.Vector2((screen.get_width() / 2), 
                             (screen.get_height() / 2))
@@ -26,13 +29,17 @@ eligible_keys = [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
 # Function that decides way movement will occur when key is pressed
 def keys(key):
     if key == pygame.K_UP:
-        player_pos.y -= 300 * dt
+        if player_pos.y >= 1:
+            player_pos.y -= 300 * dt
     if key == pygame.K_DOWN:
-        player_pos.y += 300 * dt
+        if player_pos.y <= (screen.get_height() - snake_size):
+            player_pos.y += 300 * dt
     if key == pygame.K_LEFT:
-        player_pos.x -= 300 * dt
+        if player_pos.x >= 1:
+            player_pos.x -= 300 * dt
     if key == pygame.K_RIGHT:
-        player_pos.x += 300 * dt
+        if player_pos.x <= (screen.get_width() - snake_size):
+            player_pos.x += 300 * dt
 
 # Stores keys pressed
 key_pressed = []
@@ -56,7 +63,10 @@ while running:
     screen.fill("green")
 
     # Draws snake
-    pygame.draw.circle(screen, "red", player_pos, 10)
+    # pygame.draw.circle(screen, "red", player_pos, 10)
+   
+    pygame.draw.rect(screen, "red", (player_pos.x, player_pos.y, snake_size, snake_size))
+
 
     # Checks if keys are pressed and moves snake
     if key_pressed:
