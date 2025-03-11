@@ -34,6 +34,7 @@ def keys(key):
 
 # Stores keys pressed
 keys_pressed = []
+key_to_remove = []
 
 # Game loop
 while running:
@@ -45,12 +46,16 @@ while running:
             running = False
 
         if event.type == pygame.KEYDOWN:
-            # Instead add keys to a list, always returning last item?
             keys_pressed.append(event.key)
+            key_to_remove.clear()
         
         if event.type == pygame.KEYUP:
-            # Instead add keys to a list, always returning last item?
-            keys_pressed.remove(event.key)
+            if len(keys_pressed) == 1:
+                key_to_remove.append(event.key)
+                keys_pressed.remove(event.key)
+            elif len(keys_pressed) > 1:
+                keys_pressed.remove(event.key)
+
 
     # Makes screen blue and wipes away previous frame
     screen.fill("green")
@@ -61,6 +66,9 @@ while running:
     # Checks if keys are pressed and moves snake
     if keys_pressed:
         keys(keys_pressed[-1])
+    if not keys_pressed:
+        if key_to_remove:
+            keys(key_to_remove[0])
 
     # flip() displays shows work
     pygame.display.flip()
