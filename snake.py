@@ -21,6 +21,8 @@ dt = 0
 player_pos = pygame.Vector2((screen.get_width() / 2), 
                             (screen.get_height() / 2))
 
+eligible_keys = [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
+
 # Function that decides way movement will occur when key is pressed
 def keys(key):
     if key == pygame.K_UP:
@@ -33,8 +35,7 @@ def keys(key):
         player_pos.x += 300 * dt
 
 # Stores keys pressed
-keys_pressed = []
-key_to_remove = []
+key_pressed = []
 
 # Game loop
 while running:
@@ -46,16 +47,10 @@ while running:
             running = False
 
         if event.type == pygame.KEYDOWN:
-            keys_pressed.append(event.key)
-            key_to_remove.clear()
+            if event.key in eligible_keys:
+                key_pressed.clear()
+                key_pressed.append(event.key)
         
-        if event.type == pygame.KEYUP:
-            if len(keys_pressed) == 1:
-                key_to_remove.append(event.key)
-                keys_pressed.remove(event.key)
-            elif len(keys_pressed) > 1:
-                keys_pressed.remove(event.key)
-
 
     # Makes screen blue and wipes away previous frame
     screen.fill("green")
@@ -64,11 +59,8 @@ while running:
     pygame.draw.circle(screen, "red", player_pos, 10)
 
     # Checks if keys are pressed and moves snake
-    if keys_pressed:
-        keys(keys_pressed[-1])
-    if not keys_pressed:
-        if key_to_remove:
-            keys(key_to_remove[0])
+    if key_pressed:
+        keys(key_pressed[0])
 
     # flip() displays shows work
     pygame.display.flip()
