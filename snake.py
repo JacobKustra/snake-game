@@ -21,6 +21,20 @@ dt = 0
 player_pos = pygame.Vector2((screen.get_width() / 2), 
                             (screen.get_height() / 2))
 
+
+def keys(key):
+    if key == pygame.K_UP:
+        player_pos.y -= 300 * dt
+    if key == pygame.K_DOWN:
+        player_pos.y += 300 * dt
+    if key == pygame.K_LEFT:
+        player_pos.x -= 300 * dt
+    if key == pygame.K_RIGHT:
+        player_pos.x += 300 * dt
+
+
+test = []
+
 # Game loop
 while running:
     # Checks for events
@@ -30,24 +44,28 @@ while running:
             # Ends game loop
             running = False
 
+        if event.type == pygame.KEYDOWN:
+            # Instead add keys to a list, always returning last item?
+            test.append(event.key)
+            print(f"added key {event.key}")
+        
+        if event.type == pygame.KEYUP:
+            # Instead add keys to a list, always returning last item?
+            test.remove(event.key)
+            print(f"removed key {event.key}")
+
+
+
     # Makes screen blue and wipes away previous frame
-    screen.fill("blue")
+    screen.fill("green")
 
-    # Draws player
-    pygame.draw.circle(screen, "red", player_pos, 40)
 
-    # Checks if keys are pressed and moves player
-    keys = pygame.key.get_pressed()
-    
-    if keys[pygame.K_UP]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_DOWN]:
-        player_pos.y += 300 * dt
-    if keys[pygame.K_LEFT]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_RIGHT]:
-        player_pos.x += 300 * dt
+    # Draws snake
+    pygame.draw.circle(screen, "red", player_pos, 10)
 
+    # Checks if keys are pressed and moves snake
+    if test:
+        keys(test[-1])
 
     # flip() displays shows work
     pygame.display.flip()
