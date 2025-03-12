@@ -9,7 +9,8 @@ pygame.display.init()
 # Set screen size
 screen_width = pygame.display.Info().current_w
 screen_height = pygame.display.Info().current_h
-screen = pygame.display.set_mode((screen_width, screen_height))
+square = min(screen_width, screen_height)
+screen = pygame.display.set_mode((square, square))
 
 # Grid set up
 # Cell size and snake/fruit size should be based off of set number of columns 
