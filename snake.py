@@ -7,13 +7,10 @@ pygame.init()
 pygame.display.init()
 
 # Set screen size
-screen_width = pygame.display.Info().current_w
-screen_height = pygame.display.Info().current_h
+screen_width = 900
+screen_height = 900
 square = min(screen_width, screen_height)
 screen = pygame.display.set_mode((square, square))
-
-# Frames per second
-fps = 60
 
 # Grid set up
 # Cell size and snake/fruit size should be based off of set number of columns 
@@ -27,11 +24,40 @@ clock = pygame.time.Clock()
 # Game loop is active
 running = True
 
-# x position = grid_position * cell_size
-# For example, if the player is at grid position (3, 2) and cell_size = 60
-# position_x=3×60 = 180 & position_y=2x60 = 120
+# Frames per second
+fps = 120
 
-snake_pos = pygame.Vector2((square / 2), (square / 2))
+# adds movement delay to keep game looking fluid without having
+# player move too fast
+move_delay = 100
+last_move_time = pygame.time.get_ticks()
+
+# snake positioning and movement direction
+snake_pos = [16, 16]
+snake_direction = None
+def move_snake(direction):
+    if direction == "UP":
+        snake_pos[1] -= 1
+    elif direction == "DOWN":
+        snake_pos[1] += 1
+    elif direction == "LEFT":
+        snake_pos[0] -= 1
+    elif direction == "RIGHT":
+        snake_pos[0] += 1
+        
+# Add Barriers
+def walls():
+    global running
+    global grid_num
+    if snake_pos[0] == 0:
+        running = False
+    if snake_pos[1] == 0:
+        running = False
+    if snake_pos[0] == grid_num:
+        running = False
+    if snake_pos[1] == grid_num:
+        running = False
+
 
 # Game loop
 while running:
@@ -45,28 +71,39 @@ while running:
         # pygame.KEYDOWN checks if key was pressed
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                snake_pos.y -= cell_size
+                snake_direction = "UP"
             if event.key == pygame.K_DOWN:
-                snake_pos.y += cell_size
+                snake_direction = "DOWN"
             if event.key == pygame.K_LEFT:
-                snake_pos.x -= cell_size
+                snake_direction = "LEFT"
             if event.key == pygame.K_RIGHT:
-                snake_pos.x += cell_size
+                snake_direction = "RIGHT"
 
+    # Detects wall collision
+    walls()
 
+    # Gets current time
+    current_time = pygame.time.get_ticks()
+    
     # Makes screen white and wipes away previous frame
     screen.fill("white")
     
-
-    # Draws the snake
-    pygame.draw.rect(screen, "red", (snake_pos.x, snake_pos.y, 
+    # Draws the snake in grid format
+    snake_x = snake_pos[0] * cell_size
+    snake_y = snake_pos[1] * cell_size
+    pygame.draw.rect(screen, "red", (snake_x, snake_y, 
                                      cell_size, cell_size))
 
+    # Moves the snake
+    if current_time - last_move_time > move_delay:
+        move_snake(snake_direction)
+        last_move_time = current_time
 
     # flip() displays shows work
     pygame.display.flip()
 
-    clock.tick(fps)
+    # Games FPS
+    clock.tick(60)
 
 pygame.quit()
 
