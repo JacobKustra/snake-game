@@ -33,29 +33,42 @@ move_delay = 100
 last_move_time = pygame.time.get_ticks()
 
 # snake positioning and movement direction
-snake_pos = [16, 16]
+snake_pos = [[16, 16], [17, 16], [17, 15]]
 snake_direction = None
 def move_snake(direction):
+    print(snake_pos)
     if direction == "UP":
-        snake_pos[1] -= 1
+        temp_pos = snake_pos[0].copy()
+        temp_pos[1] -= 1
+        snake_pos.insert(0, temp_pos)
+        snake_pos.pop()
     elif direction == "DOWN":
-        snake_pos[1] += 1
+        temp_pos = snake_pos[0].copy()
+        temp_pos[1] += 1
+        snake_pos.insert(0, temp_pos)
+        snake_pos.pop()
     elif direction == "LEFT":
-        snake_pos[0] -= 1
+        temp_pos = snake_pos[0].copy()
+        temp_pos[0] -= 1
+        snake_pos.insert(0, temp_pos)
+        snake_pos.pop()
     elif direction == "RIGHT":
-        snake_pos[0] += 1
+        temp_pos = snake_pos[0].copy()
+        temp_pos[0] += 1
+        snake_pos.insert(0, temp_pos)
+        snake_pos.pop()
         
 # Add Barriers
 def walls():
     global running
     global grid_num
-    if snake_pos[0] == 0:
+    if snake_pos[0][0] == 0:
         running = False
-    if snake_pos[1] == 0:
+    if snake_pos[0][1] == 0:
         running = False
-    if snake_pos[0] == grid_num:
+    if snake_pos[0][0] == grid_num:
         running = False
-    if snake_pos[1] == grid_num:
+    if snake_pos[0][1] == grid_num:
         running = False
 
 
@@ -89,13 +102,15 @@ while running:
     screen.fill("white")
     
     # Draws the snake in grid format
-    snake_x = snake_pos[0] * cell_size
-    snake_y = snake_pos[1] * cell_size
-    pygame.draw.rect(screen, "red", (snake_x, snake_y, 
-                                     cell_size, cell_size))
+    for snake_part in snake_pos:
+        snake_x = snake_part[0] * cell_size
+        snake_y = snake_part[1] * cell_size
+        pygame.draw.rect(screen, "red", (snake_x, snake_y, 
+                                         cell_size, cell_size))
 
     # Moves the snake
     if current_time - last_move_time > move_delay:
+        print('moving')
         move_snake(snake_direction)
         last_move_time = current_time
 
