@@ -83,6 +83,17 @@ def walls():
         running = False
     if snake_pos[0][1] == grid_num:
         running = False
+
+# Self Collision Check
+def self_collision():
+    global running
+    counter = 0
+    for i, snake_part in enumerate(snake_pos):
+        if i == 0:
+            pass
+        else:
+            if snake_part == snake_pos[0]:
+                running = False
     
 # Random fruit spawns
 fruit_location = [None, None]
@@ -92,6 +103,8 @@ def spawn_fruit():
     random_y = random.randint(0, (grid_num - 1))
     fruit_location.append(random_x)
     fruit_location.append(random_y)
+    if fruit_location in snake_pos:
+        spawn_fruit()
 
 # Function to check if snake eats the fruit
 def eat_fruit():
@@ -168,6 +181,8 @@ while running:
     
     # Detects wall collision
     walls()
+
+    self_collision()
 
     # flip() displays shows work
     pygame.display.flip()
