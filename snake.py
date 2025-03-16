@@ -34,7 +34,7 @@ move_delay = 100
 last_move_time = pygame.time.get_ticks()
 
 # snake positioning and movement direction
-snake_pos = [[16, 16], [17, 16], [17, 15]]
+snake_pos = [[16, 16], [17, 16], [18, 16]]
 snake_len = 3
 snake_direction = None
 def move_snake(direction):
@@ -75,9 +75,9 @@ def move_snake(direction):
 def walls():
     global running
     global grid_num
-    if snake_pos[0][0] == 0:
+    if snake_pos[0][0] == -1:
         running = False
-    if snake_pos[0][1] == 0:
+    if snake_pos[0][1] == -1:
         running = False
     if snake_pos[0][0] == grid_num:
         running = False
@@ -97,7 +97,6 @@ def spawn_fruit():
 # Function to check if snake eats the fruit
 def eat_fruit():
     global snake_len
-    print(snake_pos[0], fruit_location)
     if fruit_location[0] == None or fruit_location[1] == None:
         spawn_fruit()
     if (snake_pos[0][0] == fruit_location[0]) and (snake_pos[0][1] == 
@@ -126,9 +125,6 @@ while running:
             if event.key == pygame.K_RIGHT:
                 snake_direction = "RIGHT"
 
-    # Detects wall collision
-    walls()
-
     # Gets current time
     current_time = pygame.time.get_ticks()
     
@@ -154,7 +150,9 @@ while running:
     if current_time - last_move_time > move_delay:
         move_snake(snake_direction)
         last_move_time = current_time
-
+    
+    # Detects wall collision
+    walls()
 
     # flip() displays shows work
     pygame.display.flip()
