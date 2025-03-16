@@ -35,28 +35,41 @@ last_move_time = pygame.time.get_ticks()
 
 # snake positioning and movement direction
 snake_pos = [[16, 16], [17, 16], [17, 15]]
+snake_len = 3
 snake_direction = None
 def move_snake(direction):
     if direction == "UP":
         temp_pos = snake_pos[0].copy()
         temp_pos[1] -= 1
         snake_pos.insert(0, temp_pos)
-        snake_pos.pop()
+        if snake_len >= len(snake_pos):
+            pass
+        else:
+            snake_pos.pop()
     elif direction == "DOWN":
         temp_pos = snake_pos[0].copy()
         temp_pos[1] += 1
         snake_pos.insert(0, temp_pos)
-        snake_pos.pop()
+        if snake_len >= len(snake_pos):
+            pass
+        else:
+            snake_pos.pop()
     elif direction == "LEFT":
         temp_pos = snake_pos[0].copy()
         temp_pos[0] -= 1
         snake_pos.insert(0, temp_pos)
-        snake_pos.pop()
+        if snake_len >= len(snake_pos):
+            pass
+        else:
+            snake_pos.pop()
     elif direction == "RIGHT":
         temp_pos = snake_pos[0].copy()
         temp_pos[0] += 1
         snake_pos.insert(0, temp_pos)
-        snake_pos.pop()
+        if snake_len >= len(snake_pos):
+            pass
+        else:
+            snake_pos.pop()
         
 # Add Barriers
 def walls():
@@ -83,11 +96,13 @@ def spawn_fruit():
 
 # Function to check if snake eats the fruit
 def eat_fruit():
+    global snake_len
     print(snake_pos[0], fruit_location)
     if fruit_location[0] == None or fruit_location[1] == None:
         spawn_fruit()
     if (snake_pos[0][0] == fruit_location[0]) and (snake_pos[0][1] == 
                                                    fruit_location[1]):
+        snake_len += 1
         spawn_fruit()
 
 
