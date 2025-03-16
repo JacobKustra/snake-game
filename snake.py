@@ -1,6 +1,7 @@
 # Main file to launch snake game
 
 import pygame
+import random
 
 # Initialize pygame
 pygame.init()
@@ -36,7 +37,6 @@ last_move_time = pygame.time.get_ticks()
 snake_pos = [[16, 16], [17, 16], [17, 15]]
 snake_direction = None
 def move_snake(direction):
-    print(snake_pos)
     if direction == "UP":
         temp_pos = snake_pos[0].copy()
         temp_pos[1] -= 1
@@ -70,6 +70,13 @@ def walls():
         running = False
     if snake_pos[0][1] == grid_num:
         running = False
+    
+# Random fruit spawns
+random_x = random.randint(0, grid_num)
+random_y = random.randint(0, grid_num)
+fruit_x = random_x * cell_size
+fruit_y = random_y * cell_size
+
 
 
 # Game loop
@@ -101,6 +108,10 @@ while running:
     # Makes screen white and wipes away previous frame
     screen.fill("white")
     
+    # Draws the fruit
+    pygame.draw.rect(screen, "green", (fruit_x, fruit_y, cell_size,
+                                       cell_size))
+    
     # Draws the snake in grid format
     for snake_part in snake_pos:
         snake_x = snake_part[0] * cell_size
@@ -110,7 +121,6 @@ while running:
 
     # Moves the snake
     if current_time - last_move_time > move_delay:
-        print('moving')
         move_snake(snake_direction)
         last_move_time = current_time
 
