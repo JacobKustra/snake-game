@@ -86,7 +86,6 @@ def walls():
     
 # Random fruit spawns
 fruit_location = [None, None]
-
 def spawn_fruit():
     fruit_location.clear()
     random_x = random.randint(0, (grid_num - 1))
@@ -117,13 +116,25 @@ while running:
         # pygame.KEYDOWN checks if key was pressed
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                snake_direction = "UP"
+                if snake_direction == "DOWN":
+                    pass
+                else:
+                    snake_direction = "UP"
             if event.key == pygame.K_DOWN:
-                snake_direction = "DOWN"
+                if snake_direction == "UP":
+                    pass
+                else:
+                    snake_direction = "DOWN"
             if event.key == pygame.K_LEFT:
-                snake_direction = "LEFT"
+                if snake_direction == "RIGHT":
+                    pass
+                else:
+                    snake_direction = "LEFT"
             if event.key == pygame.K_RIGHT:
-                snake_direction = "RIGHT"
+                if snake_direction == "LEFT":
+                    pass
+                else:
+                    snake_direction = "RIGHT"
 
     # Gets current time
     current_time = pygame.time.get_ticks()
@@ -140,11 +151,15 @@ while running:
                                        cell_size, cell_size))
     
     # Draws the snake in grid format
-    for snake_part in snake_pos:
+    for x, snake_part in enumerate(snake_pos):
         snake_x = snake_part[0] * cell_size
         snake_y = snake_part[1] * cell_size
-        pygame.draw.rect(screen, "red", (snake_x, snake_y, 
-                                         cell_size, cell_size))
+        if x == 0:
+            pygame.draw.rect(screen, "black", (snake_x, snake_y, 
+                                             cell_size, cell_size))
+        else:
+            pygame.draw.rect(screen, "red", (snake_x, snake_y, 
+                                             cell_size, cell_size))
 
     # Moves the snake
     if current_time - last_move_time > move_delay:
