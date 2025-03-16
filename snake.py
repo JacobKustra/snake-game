@@ -72,11 +72,23 @@ def walls():
         running = False
     
 # Random fruit spawns
-random_x = random.randint(0, grid_num)
-random_y = random.randint(0, grid_num)
-fruit_x = random_x * cell_size
-fruit_y = random_y * cell_size
+fruit_location = [None, None]
 
+def spawn_fruit():
+    fruit_location.clear()
+    random_x = random.randint(0, (grid_num - 1))
+    random_y = random.randint(0, (grid_num - 1))
+    fruit_location.append(random_x)
+    fruit_location.append(random_y)
+
+# Function to check if snake eats the fruit
+def eat_fruit():
+    print(snake_pos[0], fruit_location)
+    if fruit_location[0] == None or fruit_location[1] == None:
+        spawn_fruit()
+    if (snake_pos[0][0] == fruit_location[0]) and (snake_pos[0][1] == 
+                                                   fruit_location[1]):
+        spawn_fruit()
 
 
 # Game loop
@@ -108,9 +120,13 @@ while running:
     # Makes screen white and wipes away previous frame
     screen.fill("white")
     
+    eat_fruit()
+
     # Draws the fruit
-    pygame.draw.rect(screen, "green", (fruit_x, fruit_y, cell_size,
-                                       cell_size))
+    fruit_x = fruit_location[0] * cell_size
+    fruit_y = fruit_location[1] * cell_size
+    pygame.draw.rect(screen, "green", (fruit_x, fruit_y,
+                                       cell_size, cell_size))
     
     # Draws the snake in grid format
     for snake_part in snake_pos:
@@ -123,6 +139,7 @@ while running:
     if current_time - last_move_time > move_delay:
         move_snake(snake_direction)
         last_move_time = current_time
+
 
     # flip() displays shows work
     pygame.display.flip()
