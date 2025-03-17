@@ -6,6 +6,7 @@ import random
 # Initialize pygame
 pygame.init()
 pygame.display.init()
+pygame.font.init()
 
 # Set screen size
 screen_width = 900
@@ -37,6 +38,7 @@ last_move_time = pygame.time.get_ticks()
 snake_pos = [[16, 16], [17, 16], [18, 16]]
 snake_len = 3
 snake_direction = None
+next_snake_direction = snake_direction
 def move_snake(direction):
     if direction == "UP":
         temp_pos = snake_pos[0].copy()
@@ -116,6 +118,8 @@ def eat_fruit():
         snake_len += 1
         spawn_fruit()
 
+# Font
+font = pygame.font.Font(None, 45)
 
 # Game loop
 while running:
@@ -128,33 +132,24 @@ while running:
 
         # pygame.KEYDOWN checks if key was pressed
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                if snake_direction == "DOWN":
-                    pass
-                else:
-                    snake_direction = "UP"
-            if event.key == pygame.K_DOWN:
-                if snake_direction == "UP":
-                    pass
-                else:
-                    snake_direction = "DOWN"
-            if event.key == pygame.K_LEFT:
-                if snake_direction == "RIGHT":
-                    pass
-                else:
-                    snake_direction = "LEFT"
-            if event.key == pygame.K_RIGHT:
-                if snake_direction == "LEFT":
-                    pass
-                else:
-                    snake_direction = "RIGHT"
+            new_direction = None
+            if event.key == pygame.K_UP and snake_direction != "DOWN":
+                new_snake_direction = "UP"
+            if event.key == pygame.K_DOWN and snake_direction != "UP":
+                new_snake_direction = "DOWN"
+            if event.key == pygame.K_LEFT and snake_direction != "RIGHT":
+                new_snake_direction = "LEFT"
+            if event.key == pygame.K_RIGHT and snake_direction != "LEFT":
+                new_snake_direction = "RIGHT"
+            next_snake_direction = new_snake_direction
 
     # Gets current time
     current_time = pygame.time.get_ticks()
     
     # Makes screen white and wipes away previous frame
     screen.fill("white")
-    
+        
+    # Checks if fruit was eaten
     eat_fruit()
 
     # Draws the fruit
@@ -176,13 +171,18 @@ while running:
 
     # Moves the snake
     if current_time - last_move_time > move_delay:
+        snake_direction = next_snake_direction
         move_snake(snake_direction)
         last_move_time = current_time
     
-    # Detects wall collision
+    # Detects collision
     walls()
-
     self_collision()
+   
+    # Displays score
+    score = f"Score: {snake_len}"
+    text = font.render(score, True, (0, 0, 0))
+    screen.blit(text, (cell_size, cell_size))
 
     # flip() displays shows work
     pygame.display.flip()
