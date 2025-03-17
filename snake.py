@@ -100,6 +100,8 @@ def self_collision():
 # Random fruit spawns
 fruit_location = [None, None]
 def spawn_fruit():
+    # TODO - Improve to select random spot after excluding snake positions
+    # to improve efficiency.
     fruit_location.clear()
     random_x = random.randint(0, (grid_num - 1))
     random_y = random.randint(0, (grid_num - 1))
