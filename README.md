@@ -1,6 +1,7 @@
 # Snake (Game)
 
 ## TODO
+* Refactor code via modularization
 * Game over screen
     * Gives choice to reload and play again
 * Welcome menu
